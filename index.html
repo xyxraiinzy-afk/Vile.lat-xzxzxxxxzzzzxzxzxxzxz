@@ -298,37 +298,33 @@ let rotateY = 0;
 let targetX = 0;
 let targetY = 0;
 
-const maxTilt = 12;     // gentle, more realistic tilt
-const stiffness = 0.05; // spring stiffness
-const damping = 0.12;   // how fast it settles
+const maxTilt = 12;     // maximum tilt
+const stiffness = 0.15; // how fast it follows target
+const damping = 0.08;   // slows overshoot
 
 centerBox.addEventListener('mousemove', e => {
   const rect = centerBox.getBoundingClientRect();
   const x = e.clientX - rect.left;
   const y = e.clientY - rect.top;
 
-  const percentX = (x - rect.width / 2) / (rect.width / 2);   // -1 to 1
-  const percentY = (y - rect.height / 2) / (rect.height / 2); // -1 to 1
+  const percentX = (x - rect.width / 2) / (rect.width / 2);
+  const percentY = (y - rect.height / 2) / (rect.height / 2);
 
-  // subtle tilt, inverted vertical for pull-up effect
   targetX = -percentY * maxTilt;
   targetY = percentX * maxTilt;
 });
 
 centerBox.addEventListener('mouseleave', () => {
   targetX = 0;
-  targetY = 0; // spring back to flat
+  targetY = 0;
 });
 
 function smoothTilt() {
-  // spring-like motion
-  const deltaX = targetX - rotateX;
-  const deltaY = targetY - rotateY;
+  // move toward target with easing
+  rotateX += (targetX - rotateX) * stiffness;
+  rotateY += (targetY - rotateY) * stiffness;
 
-  rotateX += deltaX * stiffness;
-  rotateY += deltaY * stiffness;
-
-  // damping for smooth settling
+  // apply a little damping for smooth settling
   rotateX *= (1 - damping);
   rotateY *= (1 - damping);
 
