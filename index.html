@@ -80,6 +80,17 @@
   user-select: none;
 }
 
+#clock {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 2rem;
+  font-family: monospace, monospace;
+  z-index: 20;
+  user-select: none;
+}
   
 </style>
 <script>
@@ -122,7 +133,8 @@
 </div>
   
 <audio id="audio" src="Sound.mp3" loop></audio>
-
+<div id="clock"></div>
+  
 <script>
   const canvas = document.createElement('canvas');
   document.body.appendChild(canvas);
@@ -325,6 +337,23 @@ function smoothTilt() {
   requestAnimationFrame(smoothTilt);
 }
 smoothTilt();
+
+
+const clock = document.getElementById('clock');
+
+function updateClock() {
+  const now = new Date();
+  let hours = now.getHours();
+  const minutes = now.getMinutes();
+  const seconds = now.getSeconds();
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12 || 12; // convert to 12-hour format
+  const formatted = `${hours}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')} ${ampm}`;
+  clock.textContent = formatted;
+}
+
+updateClock();
+setInterval(updateClock, 1000);
   
 </script>
 
