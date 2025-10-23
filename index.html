@@ -1,21 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Vile.lat</title>
+  <title>@9ceh</title>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const titles = ["@9ceh", "Vile", "<3", "love you"];
       let i = 0;
-      const titleElement = document.getElementById("title-text");
       setInterval(() => {
-        titleElement.textContent = titles[i];
+        document.title = titles[i];
         i = (i + 1) % titles.length;
       }, 500);
     });
   </script>
 </head>
 <body>
-  <h1 id="title-text">@9ceh</h1>
-  <p>This website is hosted on GitHub Pages.</p>
+  <h1>Vile.lat</h1>
+  <p>Vile / @9ceh</p>
 </body>
 </html>
