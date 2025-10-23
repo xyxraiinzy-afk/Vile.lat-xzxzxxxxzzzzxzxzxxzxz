@@ -294,20 +294,22 @@ overlay.addEventListener('click', () => {
 });
 
 // Smooth tilt effect on mouse move
-let rotateX = 0, rotateY = 0, targetX = 0, targetY = 0;
+let rotateX = 0, rotateY = 0;
+let targetX = 0, targetY = 0;
+const maxTilt = 12; // maximum tilt in degrees
+const ease = 0.08;  // lower = smoother, slower
 
 centerBox.addEventListener('mousemove', e => {
   const rect = centerBox.getBoundingClientRect();
   const x = e.clientX - rect.left;
   const y = e.clientY - rect.top;
 
-  // Calculate normalized percentages from center (-1 to 1)
+  // -1 to 1 ranges for position relative to center
   const percentX = (x - rect.width / 2) / (rect.width / 2);
   const percentY = (y - rect.height / 2) / (rect.height / 2);
 
-  // Stronger tilt and intuitive pull direction
-  targetX = -percentY * 30; // pull up when mouse is top
-  targetY = percentX * 30;  // horizontal tilt
+  targetX = -percentY * maxTilt; // top pulls up
+  targetY = percentX * maxTilt;  // horizontal tilt
 });
 
 centerBox.addEventListener('mouseleave', () => {
@@ -316,8 +318,8 @@ centerBox.addEventListener('mouseleave', () => {
 });
 
 function smoothTilt() {
-  rotateX += (targetX - rotateX) * 0.1;
-  rotateY += (targetY - rotateY) * 0.1;
+  rotateX += (targetX - rotateX) * ease;
+  rotateY += (targetY - rotateY) * ease;
   centerBox.style.transform = `translate(-50%, -50%) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
   requestAnimationFrame(smoothTilt);
 }
