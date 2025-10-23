@@ -68,31 +68,40 @@
       this.x = x;
       this.y = y;
       this.radius = Math.random() * 2 + 1;
-      this.speedY = Math.random() * 1 + 0.5;
-      this.speedX = (Math.random() < 0.5 ? -1 : 1) * (Math.random() * 0.5 + 0.1);
+      this.speedY = (Math.random() * 0.8 + 1.2); // faster fall
+      this.speedX = 0;
       this.opacity = 1;
       this.stuck = false;
       this.fadeStarted = false;
     }
-    update(driftDirection, speedMultiplier) {
+    update(driftDirection, speedMultiplier, isIdle) {
       if(this.stuck) {
         if(!this.fadeStarted) {
           this.fadeStarted = true;
         } else {
           this.opacity -= 0.01;
           if(this.opacity <= 0) {
-            this.reset(driftDirection);
+            this.reset(driftDirection, isIdle);
           }
         }
         return;
       }
 
-      let baseSpeedX = this.speedX;
-      if(driftDirection !== 0) {
-        baseSpeedX = driftDirection * Math.abs(baseSpeedX) * speedMultiplier;
+      let horizontalSpeed = 0;
+
+      if(isIdle) {
+        // random slight horizontal movement (left, right or none)
+        if(this.speedX === 0) {
+          this.speedX = (Math.random() - 0.5) * 0.2; // between -0.1 and 0.1
+        }
+        horizontalSpeed = this.speedX;
+      } else {
+        // drift opposite to mouse with subtle horizontal movement (10% faster)
+        const baseSpeedX = driftDirection * 0.15;
+        horizontalSpeed = baseSpeedX;
       }
 
-      this.x += baseSpeedX;
+      this.x += horizontalSpeed;
       this.y += this.speedY * speedMultiplier;
 
       if(this.x < 0) this.x = width;
@@ -109,17 +118,19 @@
         }
       }
     }
-    reset(driftDirection) {
+    reset(driftDirection, isIdle) {
       this.x = Math.random() * width;
       this.y = 0;
       this.radius = Math.random() * 2 + 1;
-      this.speedY = Math.random() * 1 + 0.5;
-      this.speedX = (Math.random() < 0.5 ? -1 : 1) * (Math.random() * 0.5 + 0.1);
+      this.speedY = (Math.random() * 0.8 + 1.2);
       this.opacity = 1;
       this.stuck = false;
       this.fadeStarted = false;
-      if(driftDirection !== 0) {
-        this.speedX = driftDirection * Math.abs(this.speedX);
+      this.speedX = 0;
+      if(isIdle) {
+        this.speedX = (Math.random() - 0.5) * 0.2;
+      } else {
+        this.speedX = driftDirection * 0.15;
       }
     }
     draw() {
@@ -141,39 +152,48 @@
 
   let mouseX = width / 2;
   let lastMouseX = mouseX;
+  let lastMoveTime = Date.now();
 
   window.addEventListener('mousemove', e => {
     lastMouseX = mouseX;
     mouseX = e.clientX;
+    lastMoveTime = Date.now();
   });
 
   function animate() {
     ctx.clearRect(0, 0, width, height);
+
+    let now = Date.now();
+    let idleTime = now - lastMoveTime;
+    let isIdle = idleTime > 30000; // 30 seconds idle
 
     let center = width / 2;
     let threshold = width / 10;
     let driftDirection = 0;
     let speedMultiplier = 1;
 
-    if (mouseX < center - threshold) {
-      driftDirection = 1;  // swap direction: mouse left → snow right
-      speedMultiplier = 1.1;
-    } else if (mouseX > center + threshold) {
-      driftDirection = -1; // mouse right → snow left
-      speedMultiplier = 1.1;
+    if(!isIdle) {
+      if (mouseX < center - threshold) {
+        driftDirection = 1;  // mouse left → snowflakes drift right (opposite)
+        speedMultiplier = 1.1;
+      } else if (mouseX > center + threshold) {
+        driftDirection = -1; // mouse right → snowflakes drift left
+        speedMultiplier = 1.1;
+      } else {
+        driftDirection = 0;
+        speedMultiplier = 1;
+      }
     } else {
       driftDirection = 0;
       speedMultiplier = 1;
     }
 
-    // If mouse isn't moving, keep previous driftDirection
     if(mouseX === lastMouseX) {
-      driftDirection = 0;
-      speedMultiplier = 1;
+      // If mouse hasn't moved since last frame but not idle yet, keep drift
     }
 
     for(let flake of snowflakes) {
-      flake.update(driftDirection, speedMultiplier);
+      flake.update(driftDirection, speedMultiplier, isIdle);
       flake.draw();
     }
 
