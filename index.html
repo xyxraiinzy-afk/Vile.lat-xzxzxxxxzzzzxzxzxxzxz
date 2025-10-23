@@ -80,16 +80,19 @@
   user-select: none;
 }
 
-#clock {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
+#boxClock {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  font-family: 'MinecraftItalic', monospace;
+  font-size: 1rem;
   color: white;
-  font-size: 2rem;
-  font-family: monospace, monospace;
-  z-index: 20;
   user-select: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+#boxClock.visible {
+  opacity: 1;
 }
   
 </style>
@@ -128,7 +131,8 @@
 <div id="overlay">// Click //</div>
 <div id="centerBox">
   <div id="boxContent">
-    <h1>ruxe <3 Dick</h1>
+    <h1>ruxe</h1>
+    <div id="boxClock"></div>
   </div>
 </div>
   
@@ -339,21 +343,38 @@ function smoothTilt() {
 smoothTilt();
 
 
-const clock = document.getElementById('clock');
+const boxClock = document.getElementById('boxClock');
 
-function updateClock() {
+function updateBoxClock() {
   const now = new Date();
   let hours = now.getHours();
   const minutes = now.getMinutes();
   const seconds = now.getSeconds();
   const ampm = hours >= 12 ? 'PM' : 'AM';
-  hours = hours % 12 || 12; // convert to 12-hour format
-  const formatted = `${hours}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')} ${ampm}`;
-  clock.textContent = formatted;
+  hours = hours % 12 || 12; // convert to 12-hour
+  boxClock.textContent = `${hours}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')} ${ampm}`;
 }
 
-updateClock();
-setInterval(updateClock, 1000);
+overlay.addEventListener('click', () => {
+  canvas.style.filter = 'none';
+  overlay.classList.add('hidden');
+  audio.play();
+
+  // fade in the box
+  setTimeout(() => {
+    centerBox.classList.add('visible');
+
+    // fade in content (text) after 0.3s
+    setTimeout(() => {
+      boxContent.classList.add('visible');
+
+      // show the clock and start updating
+      boxClock.classList.add('visible');
+      updateBoxClock();
+      setInterval(updateBoxClock, 1000);
+    }, 300);
+  }, 100);
+});
   
 </script>
 
