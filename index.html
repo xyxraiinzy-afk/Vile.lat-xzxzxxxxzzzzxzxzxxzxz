@@ -32,15 +32,15 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: black; /* overlay background */
+    background: black;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white; /* text color */
+    color: white; 
     font-size: 1.5rem;
     user-select: none;
     cursor: pointer;
-    z-index: 10; /* above canvas */
+    z-index: 10; 
     font-family: 'MinecraftItalic', monospace;
   }
 
@@ -48,7 +48,6 @@
     display: none;
   }
 
-  /* CENTER BOX */
  #centerBox {
   position: absolute;
   top: 50%;
@@ -63,15 +62,15 @@
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
   transition: transform 0.2s ease, opacity 0.8s ease;
   display: flex;
-  align-items: center; /* vertically center children */
-  padding-left: 30px;  /* space from left edge */
+  align-items: center;
+  padding-left: 30px;
   opacity: 0;
   z-index: 5;
 }
-/* CLOCK */
+
 #boxClock {
   position: absolute;
-  bottom: 15px;   /* bottom-left corner */
+  bottom: 15px;
   left: 15px;
   font-family: 'MinecraftItalic', monospace;
   font-size: 1rem;
@@ -88,7 +87,6 @@
     opacity: 1;
   }
 
-  /* PROFILE PICTURE */
   #profilePic {
     position: absolute;
     top: 35px;
@@ -108,11 +106,11 @@
 
 #userInfo {
   position: absolute;
-  top: 65px;         /* moved down slightly from 35px */
-  left: 160px;       /* same as before */
+  top: 65px;
+  left: 160px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* aligns text from top instead of center */
+  justify-content: flex-start;
   opacity: 0;
   transition: opacity 0.5s ease;
   font-family: 'MinecraftItalic', monospace;
@@ -124,28 +122,28 @@
   }
 
   #userName {
-  margin: 0 0 5px 0;  /* small bottom margin for spacing */
+  margin: 0 0 5px 0;
   font-size: 2rem;
 }
 
 #userDesc {
-  margin: -5px 0 0 0; /* adjust vertical spacing */
+  margin: -5px 0 0 0;
   font-size: 1.2rem;
   min-height: 1em;
   white-space: nowrap;
   overflow: hidden;
   position: relative;
-  border-right: none; /* remove old cursor */
-  line-height: 1.2rem; /* make line-height match font-size */
+  border-right: none;
+  line-height: 1.2rem;
 }
 
 #userDesc::after {
   content: "";
   display: inline-block;
-  width: 2px; /* cursor width */
-  height: 1.2rem; /* match line-height / font-size */
+  width: 2px;
+  height: 1.2rem;
   background-color: white;
-  vertical-align: bottom; /* aligns with text baseline */
+  vertical-align: bottom;
   animation: blink 1s step-start infinite;
 }
 
@@ -154,7 +152,6 @@
 }
 
 
-  /* CLOCK */
   #boxClock {
     position: absolute;
     bottom: 15px;
@@ -171,7 +168,6 @@
     opacity: 1;
   }
 
-  /* FONT */
   @font-face {
     font-family: 'MinecraftItalic';
     src: url('MinecraftItalic-R8Mo.otf') format('opentype');
@@ -179,7 +175,6 @@
     font-style: normal;
   }
 
-  /* GENERAL FADE-IN FOR ELEMENTS */
   #centerBox,
   #profilePic,
   #userInfo,
@@ -199,13 +194,13 @@
   #noWidgetText {
   font-family: 'MinecraftItalic', monospace;
   color: white;
-  font-size: 1.5rem; /* adjust size as needed */
+  font-size: 1.5rem;
   position: absolute;
-  top: 60%; /* start in middle vertically */
-  left: 50%; /* center horizontally */
-  transform: translate(-50%, -50%); /* exact center */
-  opacity: 1; /* always visible */
-  pointer-events: none; /* so it doesn’t block clicks */
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 1;
+  pointer-events: none;
 }
   
 </style>
@@ -261,10 +256,10 @@
 #userDesc {
   margin: 0;
   font-size: 1.2rem;
-  min-height: 1em; /* reserve space so text doesn’t jump */
+  min-height: 1em;
   white-space: nowrap;
   overflow: hidden;
-  border-right: 2px solid white; /* typewriter cursor */
+  border-right: 2px solid white;
 }
   
 </script>
@@ -288,7 +283,7 @@
   
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  // TITLE CYCLING
+
   const titles = [
     "Vile",
     "@9ceh",
@@ -304,10 +299,8 @@ document.addEventListener("DOMContentLoaded", () => {
     i = (i + 1) % titles.length;
   }, 250);
 
-  // PREVENT CONTEXT MENU
   document.addEventListener('contextmenu', e => e.preventDefault());
 
-  // PREVENT DEVTOOLS / VIEW SOURCE
   document.addEventListener('keydown', e => {
     if (e.key === "F12" || 
         (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) || 
@@ -318,7 +311,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// CANVAS SETUP
 const canvas = document.createElement('canvas');
 document.body.appendChild(canvas);
 const ctx = canvas.getContext('2d');
@@ -333,7 +325,6 @@ function resizeCanvas() {
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
-// SNOWFLAKE CLASS
 class Snowflake {
   constructor(x, y) {
     this.x = x;
@@ -360,11 +351,9 @@ class Snowflake {
     this.x += horizontalSpeed;
     this.y += this.speedY * speedMultiplier;
 
-    // wrap horizontal edges
     if (this.x < 0) this.x = width;
     if (this.x > width) this.x = 0;
 
-    // fade out at bottom
     let fadeStartY = height * 0.86;
     if (this.y >= fadeStartY && !this.stuck) {
       let progress = (this.y - fadeStartY) / (height - fadeStartY);
@@ -398,7 +387,6 @@ class Snowflake {
   }
 }
 
-// CREATE SNOWFLAKES
 const snowflakes = [];
 const snowflakeCount = 100;
 for (let i = 0; i < snowflakeCount; i++) {
@@ -413,7 +401,6 @@ window.addEventListener('mousemove', e => {
   lastMoveTime = Date.now();
 });
 
-// ANIMATE SNOWFLAKES
 function animateSnowflakes() {
   ctx.clearRect(0, 0, width, height);
 
@@ -443,7 +430,6 @@ function animateSnowflakes() {
 }
 animateSnowflakes();
 
-// ELEMENTS
 const overlay = document.getElementById('overlay');
 const audio = document.getElementById('audio');
 const centerBox = document.getElementById('centerBox');
@@ -454,17 +440,16 @@ const userDesc = document.getElementById('userDesc');
 
 let targetX = 0, targetY = 0;
 let rotateX = 0, rotateY = 0;
-const maxTilt = 8; // degrees
+const maxTilt = 8;
 const tiltEase = 0.08;
 
-// CENTER BOX TILT
 centerBox.addEventListener('mousemove', e => {
   const rect = centerBox.getBoundingClientRect();
   const percentX = (e.clientX - rect.left - rect.width/2) / (rect.width/2);
   const percentY = (e.clientY - rect.top - rect.height/2) / (rect.height/2);
 
   targetY = percentX * maxTilt;
-  targetX = -percentY * maxTilt; // invert vertical
+  targetX = -percentY * maxTilt;
 });
 
 centerBox.addEventListener('mouseleave', () => {
@@ -480,7 +465,6 @@ function smoothTilt() {
 }
 smoothTilt();
 
-// CLOCK
 function updateBoxClock() {
   const now = new Date();
   let hours = now.getHours();
@@ -491,7 +475,6 @@ function updateBoxClock() {
   boxClock.textContent = `${hours}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')} ${ampm}`;
 }
 
-// TYPEWRITER EFFECT
 const descriptions = ["Zahley <3", "Rhys likes dick", "@9ceh on discord"];
 let descIndex = 0;
 let charIndex = 0;
@@ -529,8 +512,8 @@ overlay.addEventListener('click', () => {
 
     setTimeout(() => {
       userInfo.classList.add('visible');
-      typeWriter();          // start typewriter effect
-      boxClock.classList.add('visible'); // show clock
+      typeWriter();
+      boxClock.classList.add('visible');
       updateBoxClock();
       setInterval(updateBoxClock, 1000);
     }, 200);
