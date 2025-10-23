@@ -247,8 +247,6 @@
     <h2 id="userName">Vile</h2>
     <p id="userDesc"></p>
   </div>
-</div>
-
   <div id="boxClock"></div>
 </div>
   
@@ -487,26 +485,26 @@ function typeWriter() {
   setTimeout(typeWriter, deleting ? 50 : 150);
 }
 
-// OVERLAY CLICK
 overlay.addEventListener('click', () => {
   canvas.style.filter = 'none';
   overlay.classList.add('hidden');
   audio.play();
 
-  // Fade in center box, profile pic, and user info sequentially
   setTimeout(() => {
     centerBox.classList.add('visible');
     profilePic.classList.add('visible');
 
     setTimeout(() => {
       userInfo.classList.add('visible');
-      typeWriter();
-      boxClock.classList.add('visible');
+      typeWriter();          // start typewriter effect
+      boxClock.classList.add('visible'); // show clock
       updateBoxClock();
       setInterval(updateBoxClock, 1000);
     }, 200);
+
   }, 100);
 });
+
 </script>
 
 </body>
