@@ -298,20 +298,19 @@ let rotateY = 0;
 let targetX = 0;
 let targetY = 0;
 
-const maxTilt = 12;     // maximum tilt
-const stiffness = 0.15; // how fast it follows target
-const damping = 0.08;   // slows overshoot
+const maxTilt = 25;   // strong tilt like clip
+const ease = 0.2;     // smooth interpolation
 
 centerBox.addEventListener('mousemove', e => {
   const rect = centerBox.getBoundingClientRect();
   const x = e.clientX - rect.left;
   const y = e.clientY - rect.top;
 
-  const percentX = (x - rect.width / 2) / (rect.width / 2);
-  const percentY = (y - rect.height / 2) / (rect.height / 2);
+  const percentX = (x - rect.width / 2) / (rect.width / 2);   // -1 to 1
+  const percentY = (y - rect.height / 2) / (rect.height / 2);  // -1 to 1
 
-  targetX = -percentY * maxTilt;
-  targetY = percentX * maxTilt;
+  targetX = -percentY * maxTilt; // vertical tilt
+  targetY = percentX * maxTilt;  // horizontal tilt
 });
 
 centerBox.addEventListener('mouseleave', () => {
@@ -320,13 +319,8 @@ centerBox.addEventListener('mouseleave', () => {
 });
 
 function smoothTilt() {
-  // move toward target with easing
-  rotateX += (targetX - rotateX) * stiffness;
-  rotateY += (targetY - rotateY) * stiffness;
-
-  // apply a little damping for smooth settling
-  rotateX *= (1 - damping);
-  rotateY *= (1 - damping);
+  rotateX += (targetX - rotateX) * ease;
+  rotateY += (targetY - rotateY) * ease;
 
   centerBox.style.transform = `translate(-50%, -50%) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
   requestAnimationFrame(smoothTilt);
