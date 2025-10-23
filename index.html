@@ -43,40 +43,43 @@
   left: 50%;
   width: 665px;
   height: 350px;
-  transform: translate(-50%, -50%) rotateX(0deg) rotateY(0deg);
-  background: rgba(5, 5, 5, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  transform: translate(-50%, -50%);
+  background: rgba(5,5,5,0.4);
+  border: 1px solid rgba(255,255,255,0.05);
   border-radius: 20px;
   backdrop-filter: blur(20px) saturate(150%);
-  transition: transform 0.2s ease, opacity 0.8s ease;
+  transition: transform 0.1s ease-out, opacity 0.8s ease;
   opacity: 0;
   z-index: 5;
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 #centerBox.visible {
   opacity: 1;
 }
-#centerBox h1 {
+
+#boxContent {
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#boxContent.visible {
+  opacity: 1;
+}
+
+#boxContent h1 {
   color: white;
   font-size: 4rem;
   letter-spacing: 2px;
   user-select: none;
 }
 
-#boxContent {
-  opacity: 0; /* start invisible */
-  transition: opacity 0.8s ease; /* smooth fade-in */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column; /* so future buttons stack vertically */
-}
-
-#boxContent.visible {
-  opacity: 1; /* fade-in when class is added */
-}
   
 </style>
 <script>
@@ -278,28 +281,26 @@ const boxContent = document.getElementById('boxContent');
 
 // Show box with fade-in when overlay clicked
 overlay.addEventListener('click', () => {
-  canvas.style.filter = 'none'; // remove blur
-  overlay.classList.add('hidden'); // hide overlay
-  audio.play(); // play background audio
+  canvas.style.filter = 'none';
+  overlay.classList.add('hidden');
+  audio.play();
 
   // fade in the box first
   setTimeout(() => {
     centerBox.classList.add('visible');
 
-    // fade in the content (text) after 0.3s
+    // fade in content (text) after 0.3s
     setTimeout(() => {
       boxContent.classList.add('visible');
     }, 300);
   }, 100);
 });
 
-let translateX = 0;
-let translateY = 0;
-let targetX = 0;
-let targetY = 0;
-
-const maxMove = 20; // how far it moves toward cursor
-const ease = 0.15;  // smoothing
+// Smooth "pull toward mouse" effect
+let translateX = 0, translateY = 0;
+let targetX = 0, targetY = 0;
+const maxMove = 30;  // adjust how far it moves
+const ease = 0.15;   // smoothing
 
 centerBox.addEventListener('mousemove', e => {
   const rect = centerBox.getBoundingClientRect();
@@ -309,13 +310,13 @@ centerBox.addEventListener('mousemove', e => {
   const percentX = (x - rect.width / 2) / (rect.width / 2);   // -1 to 1
   const percentY = (y - rect.height / 2) / (rect.height / 2);  // -1 to 1
 
-  targetX = percentX * maxMove;       // move horizontally toward cursor
-  targetY = -percentY * maxMove;      // move vertically toward cursor (pull up)
+  targetX = percentX * maxMove;
+  targetY = -percentY * maxMove;  // negative to pull up
 });
 
 centerBox.addEventListener('mouseleave', () => {
   targetX = 0;
-  targetY = 0; // return to center
+  targetY = 0;
 });
 
 function smoothMove() {
@@ -325,7 +326,6 @@ function smoothMove() {
   centerBox.style.transform = `translate(calc(-50% + ${translateX}px), calc(-50% + ${translateY}px))`;
   requestAnimationFrame(smoothMove);
 }
-
 smoothMove();
   
 </script>
