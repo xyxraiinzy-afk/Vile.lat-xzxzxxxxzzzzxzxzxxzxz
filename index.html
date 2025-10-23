@@ -134,25 +134,23 @@
   min-height: 1em;
   white-space: nowrap;
   overflow: hidden;
-  position: relative; /* needed for pseudo-element */
-  border-right: none; /* remove old typewriter line */
+  position: relative;
+  border-right: none; /* remove old cursor */
+  line-height: 1.2rem; /* make line-height match font-size */
 }
 
-/* blinking caret */
 #userDesc::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 0; /* adjust to align with text */
-  width: 2px; /* caret thickness */
-  height: 1.2em; /* caret height (change this!) */
-  background: white; /* caret color */
+  content: "";
+  display: inline-block;
+  width: 2px; /* cursor width */
+  height: 1.2rem; /* match line-height / font-size */
+  background-color: white;
+  vertical-align: bottom; /* aligns with text baseline */
   animation: blink 1s step-start infinite;
 }
 
 @keyframes blink {
-  0%, 50% { opacity: 1; }
-  50.01%, 100% { opacity: 0; }
+  50% { opacity: 0; }
 }
 
 
