@@ -71,7 +71,7 @@
 
 <div id="overlay">// Click //</div>
 
-<audio id="audio" src="https://cdn.pixabay.com/download/audio/2022/03/23/audio_468290c3f2.mp3?filename=click-124472.mp3"></audio>
+<audio id="audio" src="Sound.mp3" loop></audio>
 
 <script>
   const canvas = document.createElement('canvas');
@@ -211,8 +211,6 @@
       speedMultiplier = 1;
     }
 
-    if(mouseX === lastMouseX) {}
-
     for(let flake of snowflakes) {
       flake.update(driftDirection, speedMultiplier, isIdle);
       flake.draw();
@@ -235,14 +233,6 @@
   overlay.addEventListener('click', () => {
     unblur();
   });
-
-  // Optional: unblur on any click anywhere (remove if you want only overlay click)
-  // document.body.addEventListener('click', e => {
-  //   if(!overlay.classList.contains('hidden')) {
-  //     unblur();
-  //   }
-  // });
-
 </script>
 
 </body>
