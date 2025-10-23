@@ -1,41 +1,120 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Vile</title>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const titles = [
-        "Vile",
-        "@9ceh",
-        "Vile",
-        "Vile.lat",
-        "@9ceh",
-        "Vile.lat",
-        "Love you <3"
-      ];
-      let i = 0;
-      setInterval(() => {
-        document.title = titles[i];
-        i = (i + 1) % titles.length;
-      }, 250);
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Vile</title>
+<style>
+  html, body {
+    margin: 0; padding: 0; overflow: hidden; background: black; height: 100%;
+  }
+  canvas {
+    display: block;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9999;
+  }
+</style>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const titles = [
+      "Vile",
+      "@9ceh",
+      "Vile",
+      "Vile.lat",
+      "@9ceh",
+      "Vile.lat",
+      "Love you <3"
+    ];
+    let i = 0;
+    setInterval(() => {
+      document.title = titles[i];
+      i = (i + 1) % titles.length;
+    }, 250);
 
-      document.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-      });
-
-      document.addEventListener('keydown', function(e) {
-        if(e.key === "F12" || 
-           (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) || 
-           (e.ctrlKey && e.key === "U")) {
-          e.preventDefault();
-          window.location.href = "https://lol.wtf";
-        }
-      });
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
     });
-  </script>
+
+    document.addEventListener('keydown', function(e) {
+      if(e.key === "F12" || 
+         (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) || 
+         (e.ctrlKey && e.key === "U")) {
+        e.preventDefault();
+        window.location.href = "https://lol.wtf";
+      }
+    });
+  });
+</script>
 </head>
 <body>
-  <h1>Welcome to Vile.lat</h1>
-  <p>This website is hosted on GitHub Pages.</p>
+
+<script>
+  const canvas = document.createElement('canvas');
+  document.body.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+
+  let width, height;
+  function resize() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  class Snowflake {
+    constructor(x, y) {
+      this.x = x;
+      this.y = y;
+      this.radius = Math.random() * 2 + 1;
+      this.speedY = Math.random() * 1 + 0.5;
+      this.speedX = 0;
+    }
+    update(mouseX) {
+      let dx = mouseX - this.x;
+      this.speedX = dx * 0.05;
+      this.x += this.speedX;
+      this.y += this.speedY;
+      if (this.y > height) {
+        this.y = 0;
+        this.x = mouseX + (Math.random() * 100 - 50);
+      }
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.fillStyle = 'red';
+      ctx.shadowColor = 'red';
+      ctx.shadowBlur = 4;
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  const snowflakes = [];
+  const snowflakeCount = 150;
+
+  for(let i = 0; i < snowflakeCount; i++) {
+    snowflakes.push(new Snowflake(Math.random() * width, Math.random() * height));
+  }
+
+  let mouseX = width / 2;
+  window.addEventListener('mousemove', e => {
+    mouseX = e.clientX;
+  });
+
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+    for(let flake of snowflakes) {
+      flake.update(mouseX);
+      flake.draw();
+    }
+    requestAnimationFrame(animate);
+  }
+  animate();
+</script>
+
 </body>
 </html>
