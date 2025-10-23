@@ -28,20 +28,21 @@ canvas {
 }
 
   #overlay {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: black;
-    font-size: 1.5rem;
-    user-select: none;
-    cursor: pointer;
-    z-index: 10;
-  }
+  position: fixed;
+  top: 0; 
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: black; /* overlay background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white; /* text color */
+  font-size: 1.5rem;
+  user-select: none;
+  cursor: pointer;
+  z-index: 10; /* above canvas */
+}
 
   #overlay.hidden {
     display: none;
