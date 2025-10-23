@@ -36,63 +36,31 @@
   #overlay.hidden {
     display: none;
   }
-
-  /* ===== Centered box (VILE) ===== */
-  #mainBox {
-    position: fixed;
+  #centerBox {
+    position: absolute;
     top: 50%;
     left: 50%;
+    width: 420px;
+    height: 250px;
     transform: translate(-50%, -50%);
-    width: 300px;
-    height: 180px;
-    background: rgba(20, 0, 0, 0.6);
-    border: 1px solid rgba(255, 0, 0, 0.35);
-    box-shadow: 0 0 25px rgba(255, 0, 0, 0.4);
-    border-radius: 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: red;
-    text-shadow: 0 0 8px red;
-    font-size: 2rem;
-    letter-spacing: 3px;
-    font-family: monospace, monospace;
+    background: rgba(40, 40, 40, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    backdrop-filter: blur(16px) saturate(180%);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     z-index: 5;
-  }
-
-  #mainBox::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at top left, rgba(255,0,0,0.2), transparent 70%);
-    border-radius: inherit;
-    pointer-events: none;
-  }
-
-  #mainBox:hover {
-    box-shadow: 0 0 45px rgba(255, 0, 0, 0.6);
   }
 </style>
 <script>
   document.addEventListener("DOMContentLoaded", () => {
-    const titles = [
-      "Vile",
-      "@9ceh",
-      "Vile",
-      "Vile.lat",
-      "@9ceh",
-      "Vile.lat",
-      "Love you <3"
-    ];
+    const titles = ["Vile","@9ceh","Vile.lat","Love you <3"];
     let i = 0;
     setInterval(() => {
       document.title = titles[i];
       i = (i + 1) % titles.length;
     }, 250);
-
     document.addEventListener('contextmenu', e => e.preventDefault());
-
     document.addEventListener('keydown', e => {
       if(e.key === "F12" || 
          (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) || 
@@ -105,21 +73,13 @@
 </script>
 </head>
 <body>
-
 <div id="overlay">// Click //</div>
-
-<!-- Center Box -->
-<div id="mainBox">
-  <h1>VILE</h1>
-</div>
-
+<div id="centerBox"></div>
 <audio id="audio" src="Sound.mp3" loop></audio>
-
 <script>
   const canvas = document.createElement('canvas');
   document.body.appendChild(canvas);
   const ctx = canvas.getContext('2d');
-
   let width, height;
   function resize() {
     width = window.innerWidth;
@@ -129,7 +89,6 @@
   }
   window.addEventListener('resize', resize);
   resize();
-
   class Snowflake {
     constructor(x, y) {
       this.x = x;
@@ -143,35 +102,25 @@
     }
     update(driftDirection, speedMultiplier, isIdle) {
       if(this.stuck) {
-        if(!this.fadeStarted) {
-          this.fadeStarted = true;
-        } else {
+        if(!this.fadeStarted) this.fadeStarted = true;
+        else {
           this.opacity -= 0.01;
-          if(this.opacity <= 0) {
-            this.reset(driftDirection, isIdle);
-          }
+          if(this.opacity <= 0) this.reset(driftDirection, isIdle);
         }
         return;
       }
-
       let horizontalSpeed = 0;
-
       if(isIdle) {
-        if(this.speedX === 0) {
-          this.speedX = (Math.random() - 0.5) * 0.2;
-        }
+        if(this.speedX === 0) this.speedX = (Math.random() - 0.5) * 0.2;
         horizontalSpeed = this.speedX;
       } else {
         const baseSpeedX = driftDirection * 0.45;
         horizontalSpeed = baseSpeedX;
       }
-
       this.x += horizontalSpeed;
       this.y += this.speedY * speedMultiplier;
-
       if(this.x < 0) this.x = width;
       if(this.x > width) this.x = 0;
-
       let fadeStartY = height * 0.86;
       if(this.y >= fadeStartY && !this.stuck) {
         let progress = (this.y - fadeStartY) / (height - fadeStartY);
@@ -192,11 +141,8 @@
       this.stuck = false;
       this.fadeStarted = false;
       this.speedX = 0;
-      if(isIdle) {
-        this.speedX = (Math.random() - 0.5) * 0.2;
-      } else {
-        this.speedX = driftDirection * 0.15;
-      }
+      if(isIdle) this.speedX = (Math.random() - 0.5) * 0.2;
+      else this.speedX = driftDirection * 0.15;
     }
     draw() {
       ctx.beginPath();
@@ -207,34 +153,26 @@
       ctx.fill();
     }
   }
-
   const snowflakes = [];
   const snowflakeCount = 100;
-
   for(let i = 0; i < snowflakeCount; i++) {
     snowflakes.push(new Snowflake(Math.random() * width, Math.random() * height));
   }
-
   let mouseX = width / 2;
   let lastMoveTime = Date.now();
-
   window.addEventListener('mousemove', e => {
     mouseX = e.clientX;
     lastMoveTime = Date.now();
   });
-
   function animate() {
     ctx.clearRect(0, 0, width, height);
-
     let now = Date.now();
     let idleTime = now - lastMoveTime;
     let isIdle = idleTime > 30000;
-
     let center = width / 2;
     let threshold = width / 10;
     let driftDirection = 0;
     let speedMultiplier = 1;
-
     if (!isIdle) {
       const maxDrift = 1;
       let distanceFromCenter = mouseX - center;
@@ -246,54 +184,38 @@
       driftDirection = 0;
       speedMultiplier = 1;
     }
-
     for(let flake of snowflakes) {
       flake.update(driftDirection, speedMultiplier, isIdle);
       flake.draw();
     }
-
     requestAnimationFrame(animate);
   }
   animate();
-
   const overlay = document.getElementById('overlay');
   const audio = document.getElementById('audio');
   const canvasElem = canvas;
-
   function unblur() {
     canvasElem.style.filter = 'none';
     overlay.classList.add('hidden');
     audio.play();
   }
-
   overlay.addEventListener('click', () => {
     unblur();
   });
-
-  // ===== Tilt effect for center box =====
-  const mainBox = document.getElementById("mainBox");
-  const maxTilt = 10; // degrees
-
-  mainBox.addEventListener("mousemove", (e) => {
-    const rect = mainBox.getBoundingClientRect();
+  const centerBox = document.getElementById('centerBox');
+  centerBox.addEventListener('mousemove', e => {
+    const rect = centerBox.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const percentX = (x - centerX) / centerX;
-    const percentY = (y - centerY) / centerY;
-
-    const rotateX = percentY * maxTilt;
-    const rotateY = percentX * -maxTilt;
-
-    mainBox.style.transform =
-      `translate(-50%, -50%) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    const rotateX = ((y - rect.height / 2) / rect.height) * -20;
+    const rotateY = ((x - rect.width / 2) / rect.width) * 20;
+    centerBox.style.transform = `translate(-50%, -50%) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+    centerBox.style.boxShadow = `0 0 25px rgba(255, 255, 255, 0.15)`;
   });
-
-  mainBox.addEventListener("mouseleave", () => {
-    mainBox.style.transform = "translate(-50%, -50%) rotateX(0deg) rotateY(0deg)";
+  centerBox.addEventListener('mouseleave', () => {
+    centerBox.style.transform = `translate(-50%, -50%) rotateX(0deg) rotateY(0deg) scale(1)`;
+    centerBox.style.boxShadow = `0 0 20px rgba(255, 255, 255, 0.05)`;
   });
 </script>
-
 </body>
 </html>
