@@ -294,28 +294,35 @@ overlay.addEventListener('click', () => {
 });
 
 let rotateX = 0;
+let rotateY = 0;
 let targetX = 0;
-const maxTilt = 30;  // more dramatic vertical tilt
-const ease = 0.2;    // faster smoothing for quick response
+let targetY = 0;
+const maxTilt = 25; // strong tilt
+const ease = 0.15;  // smoothing factor
 
 centerBox.addEventListener('mousemove', e => {
   const rect = centerBox.getBoundingClientRect();
+  const x = e.clientX - rect.left;
   const y = e.clientY - rect.top;
 
-  // -1 (top) to 1 (bottom) relative to center
+  // -1 to 1 from center
+  const percentX = (x - rect.width / 2) / (rect.width / 2);
   const percentY = (y - rect.height / 2) / (rect.height / 2);
 
-  // Negative so top pulls up
-  targetX = -percentY * maxTilt;
+  // Correct orientation: top = pull up, bottom = pull down
+  targetX = -percentY * maxTilt; // vertical tilt
+  targetY = percentX * maxTilt;  // horizontal tilt
 });
 
 centerBox.addEventListener('mouseleave', () => {
-  targetX = 0;  // reset to flat
+  targetX = 0;
+  targetY = 0;
 });
 
 function smoothTilt() {
   rotateX += (targetX - rotateX) * ease;
-  centerBox.style.transform = `translate(-50%, -50%) rotateX(${rotateX}deg)`;
+  rotateY += (targetY - rotateY) * ease;
+  centerBox.style.transform = `translate(-50%, -50%) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
   requestAnimationFrame(smoothTilt);
 }
 smoothTilt();
