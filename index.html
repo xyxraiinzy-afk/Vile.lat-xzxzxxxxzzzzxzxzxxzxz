@@ -297,26 +297,26 @@ let rotateX = 0;
 let rotateY = 0;
 let targetX = 0;
 let targetY = 0;
-const maxTilt = 25; // strong tilt
-const ease = 0.15;  // smoothing factor
+const maxTilt = 30; // strength of tilt
+const ease = 0.2;   // smoothing factor
 
 centerBox.addEventListener('mousemove', e => {
   const rect = centerBox.getBoundingClientRect();
   const x = e.clientX - rect.left;
   const y = e.clientY - rect.top;
 
-  // -1 to 1 from center
-  const percentX = (x - rect.width / 2) / (rect.width / 2);
-  const percentY = (y - rect.height / 2) / (rect.height / 2);
+  // relative position to center
+  const percentX = (x - rect.width / 2) / (rect.width / 2);   // -1 to 1
+  const percentY = (y - rect.height / 2) / (rect.height / 2); // -1 to 1
 
-  // Correct orientation: top = pull up, bottom = pull down
-  targetX = -percentY * maxTilt; // vertical tilt
-  targetY = percentX * maxTilt;  // horizontal tilt
+  // invert vertical so top pulls up
+  targetX = -percentY * maxTilt;
+  targetY = percentX * maxTilt;
 });
 
 centerBox.addEventListener('mouseleave', () => {
   targetX = 0;
-  targetY = 0;
+  targetY = 0; // reset tilt
 });
 
 function smoothTilt() {
