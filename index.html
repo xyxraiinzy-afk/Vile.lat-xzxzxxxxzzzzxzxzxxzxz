@@ -36,6 +36,43 @@
   #overlay.hidden {
     display: none;
   }
+
+  /* ===== Centered box (VILE) ===== */
+  #mainBox {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 180px;
+    background: rgba(20, 0, 0, 0.6);
+    border: 1px solid rgba(255, 0, 0, 0.35);
+    box-shadow: 0 0 25px rgba(255, 0, 0, 0.4);
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: red;
+    text-shadow: 0 0 8px red;
+    font-size: 2rem;
+    letter-spacing: 3px;
+    font-family: monospace, monospace;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    z-index: 5;
+  }
+
+  #mainBox::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top left, rgba(255,0,0,0.2), transparent 70%);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  #mainBox:hover {
+    box-shadow: 0 0 45px rgba(255, 0, 0, 0.6);
+  }
 </style>
 <script>
   document.addEventListener("DOMContentLoaded", () => {
@@ -70,6 +107,11 @@
 <body>
 
 <div id="overlay">// Click //</div>
+
+<!-- Center Box -->
+<div id="mainBox">
+  <h1>VILE</h1>
+</div>
 
 <audio id="audio" src="Sound.mp3" loop></audio>
 
@@ -194,7 +236,6 @@
     let speedMultiplier = 1;
 
     if (!isIdle) {
-      // Smooth drift calculation based on distance from center
       const maxDrift = 1;
       let distanceFromCenter = mouseX - center;
       if (distanceFromCenter > threshold) distanceFromCenter = threshold;
@@ -227,6 +268,30 @@
 
   overlay.addEventListener('click', () => {
     unblur();
+  });
+
+  // ===== Tilt effect for center box =====
+  const mainBox = document.getElementById("mainBox");
+  const maxTilt = 10; // degrees
+
+  mainBox.addEventListener("mousemove", (e) => {
+    const rect = mainBox.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const percentX = (x - centerX) / centerX;
+    const percentY = (y - centerY) / centerY;
+
+    const rotateX = percentY * maxTilt;
+    const rotateY = percentX * -maxTilt;
+
+    mainBox.style.transform =
+      `translate(-50%, -50%) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+  });
+
+  mainBox.addEventListener("mouseleave", () => {
+    mainBox.style.transform = "translate(-50%, -50%) rotateX(0deg) rotateY(0deg)";
   });
 </script>
 
