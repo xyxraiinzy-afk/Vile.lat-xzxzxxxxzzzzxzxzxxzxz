@@ -53,8 +53,8 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 700px;   /* restored original width */
-  height: 390px;  /* restored original height */
+  width: 700px;
+  height: 390px;
   transform: translate(-50%, -50%);
   background: rgba(0, 0, 0, 0.35);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -63,12 +63,11 @@
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
   transition: transform 0.2s ease, opacity 0.8s ease;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  align-items: center; /* vertically center children */
+  padding-left: 30px;  /* space from left edge */
   opacity: 0;
   z-index: 5;
 }
-
 /* CLOCK */
 #boxClock {
   position: absolute;
@@ -109,14 +108,15 @@
 
   /* USER INFO */
   #userInfo {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    font-family: 'MinecraftItalic', monospace;
-    color: white;
-  }
+  margin-left: 20px; /* space between pic and text */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* vertically center text next to pic */
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  font-family: 'MinecraftItalic', monospace;
+  color: white;
+}
 
   #userInfo.visible {
     opacity: 1;
@@ -247,7 +247,7 @@
     <h2 id="userName">Vile</h2>
     <p id="userDesc"></p>
   </div>
-  <div id="boxClock"></div>
+  <div id="boxClock"></div> 
 </div>
   
 <audio id="audio" src="Sound.mp3" loop></audio>
