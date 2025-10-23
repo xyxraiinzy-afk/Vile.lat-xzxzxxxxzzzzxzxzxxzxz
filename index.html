@@ -273,7 +273,6 @@
   }
 
 
-
 const centerBox = document.getElementById('centerBox');
 const boxContent = document.getElementById('boxContent');
 
@@ -302,9 +301,13 @@ centerBox.addEventListener('mousemove', e => {
   const x = e.clientX - rect.left;
   const y = e.clientY - rect.top;
 
-  // Stronger tilt and pull-up effect
-  targetX = ((y - rect.height / 2) / rect.height) * 30; // X-axis inverted
-  targetY = ((x - rect.width / 2) / rect.width) * 30;   // stronger horizontal tilt
+  // Calculate normalized percentages from center (-1 to 1)
+  const percentX = (x - rect.width / 2) / (rect.width / 2);
+  const percentY = (y - rect.height / 2) / (rect.height / 2);
+
+  // Stronger tilt and intuitive pull direction
+  targetX = -percentY * 30; // pull up when mouse is top
+  targetY = percentX * 30;  // horizontal tilt
 });
 
 centerBox.addEventListener('mouseleave', () => {
