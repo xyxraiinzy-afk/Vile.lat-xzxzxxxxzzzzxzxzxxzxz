@@ -64,6 +64,19 @@
   letter-spacing: 2px;
   user-select: none;
 }
+
+#boxContent {
+  opacity: 0; /* start invisible */
+  transition: opacity 0.8s ease; /* smooth fade-in */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column; /* so future buttons stack vertically */
+}
+
+#boxContent.visible {
+  opacity: 1; /* fade-in when class is added */
+}
   
 </style>
 <script>
@@ -99,7 +112,11 @@
 <body>
 
 <div id="overlay">// Click //</div>
-<div id="centerBox"><h1>ruxe</h1></div>
+<div id="centerBox">
+  <div id="boxContent">
+    <h1>ruxe <3 Dick</h1>
+  </div>
+</div>
   
 <audio id="audio" src="Sound.mp3" loop></audio>
 
@@ -257,16 +274,24 @@
 
 
 
-  const centerBox = document.getElementById('centerBox');
+const centerBox = document.getElementById('centerBox');
+const boxContent = document.getElementById('boxContent');
 
 // Show box with fade-in when overlay clicked
 overlay.addEventListener('click', () => {
-  canvas.style.filter = 'none';
-  overlay.classList.add('hidden');
+  canvas.style.filter = 'none'; // remove blur
+  overlay.classList.add('hidden'); // hide overlay
+  audio.play(); // play background audio
+
+  // fade in the box first
   setTimeout(() => {
     centerBox.classList.add('visible');
+
+    // fade in the content (text) after 0.3s
+    setTimeout(() => {
+      boxContent.classList.add('visible');
+    }, 300);
   }, 100);
-  audio.play();
 });
 
 // Smooth tilt effect on mouse move
@@ -276,8 +301,10 @@ centerBox.addEventListener('mousemove', e => {
   const rect = centerBox.getBoundingClientRect();
   const x = e.clientX - rect.left;
   const y = e.clientY - rect.top;
-  targetX = ((y - rect.height / 2) / rect.height) * -20;
-  targetY = ((x - rect.width / 2) / rect.width) * 20;
+
+  // Stronger tilt and pull-up effect
+  targetX = ((y - rect.height / 2) / rect.height) * 30; // X-axis inverted
+  targetY = ((x - rect.width / 2) / rect.width) * 30;   // stronger horizontal tilt
 });
 
 centerBox.addEventListener('mouseleave', () => {
