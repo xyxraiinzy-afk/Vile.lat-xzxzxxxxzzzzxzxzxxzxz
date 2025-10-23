@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Vile</title>
 <style>
->
   html, body {
     margin: 0; 
     padding: 0; 
@@ -15,106 +14,64 @@
     font-family: monospace, monospace;
   }
 
-canvas {
-  display: block;
-  position: fixed;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  z-index: 1;
-  filter: blur(8px);
-  transition: filter 0.5s ease;
-  background: black;
-}
+  canvas {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 1;
+    filter: blur(8px);
+    transition: filter 0.5s ease;
+    background: black;
+  }
 
   #overlay {
-  position: fixed;
-  top: 0; 
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: black; /* overlay background */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white; /* text color */
-  font-size: 1.5rem;
-  user-select: none;
-  cursor: pointer;
-  z-index: 10; /* above canvas */
-  font-family: 'MinecraftItalic', monospace;
-}
+    position: fixed;
+    top: 0; 
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: black; /* overlay background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white; /* text color */
+    font-size: 1.5rem;
+    user-select: none;
+    cursor: pointer;
+    z-index: 10; /* above canvas */
+    font-family: 'MinecraftItalic', monospace;
+  }
 
   #overlay.hidden {
     display: none;
   }
 
   /* CENTER BOX */
- #centerBox {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 665px;
-  height: 350px;
-  transform: translate(-50%, -50%);
-  background: rgba(0, 0, 0, 0.35); /* glassy black, more see-through */
-  border: 1px solid rgba(255, 255, 255, 0.08); /* subtle outline */
-  border-radius: 20px;
-  backdrop-filter: blur(35px) saturate(150%);
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* optional subtle glow for depth */
-  transition: transform 0.2s ease, opacity 0.8s ease;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  opacity: 0;
-  z-index: 5;
-}
+  #centerBox {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 665px;
+    height: 350px;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.35); /* glassy black, more see-through */
+    border: 1px solid rgba(255, 255, 255, 0.08); /* subtle outline */
+    border-radius: 20px;
+    backdrop-filter: blur(35px) saturate(150%);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* optional subtle glow for depth */
+    transition: transform 0.2s ease, opacity 0.8s ease;
+    display: flex;
+    justify-content: flex-start; /* for PFP + info alignment */
+    align-items: center;
+    padding-left: 180px; /* space for PFP */
+    opacity: 0;
+    z-index: 5;
+  }
 
   #centerBox.visible {
     opacity: 1;
-  }
-
-  #boxContent {
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-
-  #boxContent.visible {
-    opacity: 1;
-  }
-
-  #boxContent h1 {
-    color: white;
-    font-size: 4rem;
-    letter-spacing: 2px;
-    user-select: none;
-  }
-
-  /* CLOCK */
-  #boxClock {
-    position: absolute;
-    bottom: 15px;
-    left: 15px;
-    font-family: 'MinecraftItalic', monospace; 
-    font-size: 1rem;
-    color: white;
-    user-select: none;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-  }
-  #boxClock.visible {
-    opacity: 1;
-  }
-
-  @font-face {
-    font-family: 'MinecraftItalic';
-    src: url('MinecraftItalic-R8Mo.otf') format('opentype');
-    font-weight: normal;
-    font-style: normal;
   }
 
   /* PROFILE PICTURE */
@@ -135,10 +92,64 @@ canvas {
     opacity: 1;
   }
 
-  /* GENERAL FADE-IN FOR ALL ELEMENTS */
+  /* USER INFO */
+  #userInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    font-family: 'MinecraftItalic', monospace;
+    color: white;
+  }
+
+  #userInfo.visible {
+    opacity: 1;
+  }
+
+  #userName {
+    margin: 0;
+    font-size: 2rem;
+  }
+
+  #userDesc {
+    margin: 0;
+    font-size: 1.2rem;
+    min-height: 1.5em; /* reserve space so text doesn’t jump */
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 2px solid white; /* typewriter cursor */
+  }
+
+  /* CLOCK */
+  #boxClock {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    font-family: 'MinecraftItalic', monospace; 
+    font-size: 1rem;
+    color: white;
+    user-select: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  #boxClock.visible {
+    opacity: 1;
+  }
+
+  /* FONT */
+  @font-face {
+    font-family: 'MinecraftItalic';
+    src: url('MinecraftItalic-R8Mo.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  /* GENERAL FADE-IN FOR ELEMENTS */
   #centerBox,
   #profilePic,
-  #boxContent,
+  #userInfo,
   #boxClock {
     opacity: 0;
     transition: opacity 0.5s ease;
@@ -146,7 +157,7 @@ canvas {
 
   #centerBox.visible,
   #profilePic.visible,
-  #boxContent.visible,
+  #userInfo.visible,
   #boxClock.visible {
     opacity: 1;
   }
@@ -179,6 +190,36 @@ canvas {
       }
     });
   });
+
+#userInfo {
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  font-family: 'MinecraftItalic', monospace;
+  color: white;
+}
+
+#userInfo.visible {
+  opacity: 1;
+}
+
+#userName {
+  margin: 0;
+  font-size: 2rem;
+}
+
+#userDesc {
+  margin: 0;
+  font-size: 1.2rem;
+  min-height: 1.5em; /* reserve space so text doesn’t jump */
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 2px solid white; /* typewriter cursor */
+}
+  
 </script>
 </head>
 <body>
@@ -186,16 +227,12 @@ canvas {
 <div id="overlay">// Click //</div>
   
 <div id="centerBox">
-  <img id="profilePic" src="pfp.png" alt="Profile Picture">
-
+  <img id="profilePic" src="pfp.png" alt="Profile Picture" />
   <div id="userInfo">
-    <div id="nameBadge">
-      <span id="userName">Ruxe</span>
-      <span id="userBadge">[Badge]</span>
-    </div>
-    <div id="description">Loading...</div>
-    <div id="message">Welcome to the profile!</div>
+    <h2 id="userName">Vile</h2>
+    <p id="userDesc"></p>
   </div>
+</div>
 
   <div id="boxClock"></div>
 </div>
@@ -204,203 +241,184 @@ canvas {
 <div id="clock"></div>
   
 <script>
-  const canvas = document.createElement('canvas');
-  document.body.appendChild(canvas);
-  const ctx = canvas.getContext('2d');
+document.addEventListener("DOMContentLoaded", () => {
+  // TITLE CYCLING
+  const titles = [
+    "Vile",
+    "@9ceh",
+    "Vile",
+    "Vile.lat",
+    "@9ceh",
+    "Vile.lat",
+    "Love you <3"
+  ];
+  let i = 0;
+  setInterval(() => {
+    document.title = titles[i];
+    i = (i + 1) % titles.length;
+  }, 250);
 
-  let width, height;
-  function resize() {
-    width = window.innerWidth;
-    height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
-  }
-  window.addEventListener('resize', resize);
-  resize();
+  // PREVENT CONTEXT MENU
+  document.addEventListener('contextmenu', e => e.preventDefault());
 
-  class Snowflake {
-    constructor(x, y) {
-      this.x = x;
-      this.y = y;
-      this.radius = Math.random() * 2 + 1;
-      this.speedY = (Math.random() * 1.3 + 2);
-      this.speedX = 0;
-      this.opacity = 1;
-      this.stuck = false;
-      this.fadeStarted = false;
+  // PREVENT DEVTOOLS / VIEW SOURCE
+  document.addEventListener('keydown', e => {
+    if (e.key === "F12" || 
+        (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) || 
+        (e.ctrlKey && e.key === "U")) {
+      e.preventDefault();
+      window.location.href = "https://lol.wtf";
     }
-    update(driftDirection, speedMultiplier, isIdle) {
-      if(this.stuck) {
-        if(!this.fadeStarted) {
-          this.fadeStarted = true;
-        } else {
-          this.opacity -= 0.01;
-          if(this.opacity <= 0) {
-            this.reset(driftDirection, isIdle);
-          }
-        }
-        return;
-      }
-
-      let horizontalSpeed = 0;
-
-      if(isIdle) {
-        if(this.speedX === 0) {
-          this.speedX = (Math.random() - 0.5) * 0.2;
-        }
-        horizontalSpeed = this.speedX;
-      } else {
-        const baseSpeedX = driftDirection * 0.45;
-        horizontalSpeed = baseSpeedX;
-      }
-
-      this.x += horizontalSpeed;
-      this.y += this.speedY * speedMultiplier;
-
-      if(this.x < 0) this.x = width;
-      if(this.x > width) this.x = 0;
-
-      let fadeStartY = height * 0.86;
-      if(this.y >= fadeStartY && !this.stuck) {
-        let progress = (this.y - fadeStartY) / (height - fadeStartY);
-        this.opacity = 1 - progress;
-        if(progress >= 1) {
-          this.stuck = true;
-          this.opacity = 0;
-          this.y = height;
-        }
-      }
-    }
-    reset(driftDirection, isIdle) {
-      this.x = Math.random() * width;
-      this.y = 0;
-      this.radius = Math.random() * 2 + 1;
-      this.speedY = (Math.random() * 0.8 + 1.2);
-      this.opacity = 1;
-      this.stuck = false;
-      this.fadeStarted = false;
-      this.speedX = 0;
-      if(isIdle) {
-        this.speedX = (Math.random() - 0.5) * 0.2;
-      } else {
-        this.speedX = driftDirection * 0.15;
-      }
-    }
-    draw() {
-      ctx.beginPath();
-      ctx.fillStyle = `rgba(255, 0, 0, ${this.opacity})`;
-      ctx.shadowColor = 'red';
-      ctx.shadowBlur = 4 * this.opacity;
-      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
-
-  const snowflakes = [];
-  const snowflakeCount = 100;
-
-  for(let i = 0; i < snowflakeCount; i++) {
-    snowflakes.push(new Snowflake(Math.random() * width, Math.random() * height));
-  }
-
-  let mouseX = width / 2;
-  let lastMoveTime = Date.now();
-
-  window.addEventListener('mousemove', e => {
-    mouseX = e.clientX;
-    lastMoveTime = Date.now();
   });
-
-  function animate() {
-    ctx.clearRect(0, 0, width, height);
-
-    let now = Date.now();
-    let idleTime = now - lastMoveTime;
-    let isIdle = idleTime > 30000;
-
-    let center = width / 2;
-    let threshold = width / 10;
-    let driftDirection = 0;
-    let speedMultiplier = 1;
-
-    if (!isIdle) {
-      // Smooth drift calculation based on distance from center
-      const maxDrift = 1;
-      let distanceFromCenter = mouseX - center;
-      if (distanceFromCenter > threshold) distanceFromCenter = threshold;
-      if (distanceFromCenter < -threshold) distanceFromCenter = -threshold;
-      driftDirection = (distanceFromCenter / threshold) * maxDrift;
-      speedMultiplier = 1.1;
-    } else {
-      driftDirection = 0;
-      speedMultiplier = 1;
-    }
-
-    for(let flake of snowflakes) {
-      flake.update(driftDirection, speedMultiplier, isIdle);
-      flake.draw();
-    }
-
-    requestAnimationFrame(animate);
-  }
-  animate();
-
-  const overlay = document.getElementById('overlay');
-  const audio = document.getElementById('audio');
-  const canvasElem = canvas;
-
-  function unblur() {
-    canvasElem.style.filter = 'none';
-    overlay.classList.add('hidden');
-    audio.play();
-  }
-
-
-const centerBox = document.getElementById('centerBox');
-const boxContent = document.getElementById('boxContent');
-
-overlay.addEventListener('click', () => {
-  canvas.style.filter = 'none';
-  overlay.classList.add('hidden');
-  audio.play();
-
-  setTimeout(() => {
-    centerBox.classList.add('visible');
-
-    setTimeout(() => {
-      profilePic.classList.add('visible');
-
-      setTimeout(() => {
-        userInfo.classList.add('visible');
-
-        setTimeout(() => {
-          boxClock.classList.add('visible');
-          updateBoxClock();
-          setInterval(updateBoxClock, 1000);
-        }, 300);
-
-      }, 300);
-
-    }, 300);
-
-  }, 100);
 });
 
-let rotateX = 0, rotateY = 0;
-let targetX = 0, targetY = 0;
-const maxTilt = 20; // degrees
-const tiltEase = 0.15;
+// CANVAS SETUP
+const canvas = document.createElement('canvas');
+document.body.appendChild(canvas);
+const ctx = canvas.getContext('2d');
 
+let width, height;
+function resizeCanvas() {
+  width = window.innerWidth;
+  height = window.innerHeight;
+  canvas.width = width;
+  canvas.height = height;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+// SNOWFLAKE CLASS
+class Snowflake {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.radius = Math.random() * 2 + 1;
+    this.speedY = Math.random() * 1.3 + 2;
+    this.speedX = 0;
+    this.opacity = 1;
+    this.stuck = false;
+    this.fadeStarted = false;
+  }
+
+  update(driftDirection, speedMultiplier, isIdle) {
+    if (this.stuck) {
+      if (!this.fadeStarted) this.fadeStarted = true;
+      else this.opacity -= 0.01;
+
+      if (this.opacity <= 0) this.reset(driftDirection, isIdle);
+      return;
+    }
+
+    let horizontalSpeed = isIdle ? (this.speedX || (this.speedX = (Math.random() - 0.5) * 0.2)) : driftDirection * 0.45;
+
+    this.x += horizontalSpeed;
+    this.y += this.speedY * speedMultiplier;
+
+    // wrap horizontal edges
+    if (this.x < 0) this.x = width;
+    if (this.x > width) this.x = 0;
+
+    // fade out at bottom
+    let fadeStartY = height * 0.86;
+    if (this.y >= fadeStartY && !this.stuck) {
+      let progress = (this.y - fadeStartY) / (height - fadeStartY);
+      this.opacity = 1 - progress;
+      if (progress >= 1) {
+        this.stuck = true;
+        this.opacity = 0;
+        this.y = height;
+      }
+    }
+  }
+
+  reset(driftDirection, isIdle) {
+    this.x = Math.random() * width;
+    this.y = 0;
+    this.radius = Math.random() * 2 + 1;
+    this.speedY = Math.random() * 0.8 + 1.2;
+    this.opacity = 1;
+    this.stuck = false;
+    this.fadeStarted = false;
+    this.speedX = isIdle ? (Math.random() - 0.5) * 0.2 : driftDirection * 0.15;
+  }
+
+  draw() {
+    ctx.beginPath();
+    ctx.fillStyle = `rgba(255,0,0,${this.opacity})`;
+    ctx.shadowColor = 'red';
+    ctx.shadowBlur = 4 * this.opacity;
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+// CREATE SNOWFLAKES
+const snowflakes = [];
+const snowflakeCount = 100;
+for (let i = 0; i < snowflakeCount; i++) {
+  snowflakes.push(new Snowflake(Math.random() * width, Math.random() * height));
+}
+
+let mouseX = window.innerWidth / 2;
+let lastMoveTime = Date.now();
+
+window.addEventListener('mousemove', e => {
+  mouseX = e.clientX;
+  lastMoveTime = Date.now();
+});
+
+// ANIMATE SNOWFLAKES
+function animateSnowflakes() {
+  ctx.clearRect(0, 0, width, height);
+
+  const now = Date.now();
+  const isIdle = (now - lastMoveTime) > 30000;
+
+  const center = width / 2;
+  const threshold = width / 10;
+  let driftDirection = 0;
+  let speedMultiplier = 1;
+
+  if (!isIdle) {
+    const maxDrift = 1;
+    let distanceFromCenter = mouseX - center;
+    if (distanceFromCenter > threshold) distanceFromCenter = threshold;
+    if (distanceFromCenter < -threshold) distanceFromCenter = -threshold;
+    driftDirection = (distanceFromCenter / threshold) * maxDrift;
+    speedMultiplier = 1.1;
+  }
+
+  for (const flake of snowflakes) {
+    flake.update(driftDirection, speedMultiplier, isIdle);
+    flake.draw();
+  }
+
+  requestAnimationFrame(animateSnowflakes);
+}
+animateSnowflakes();
+
+// ELEMENTS
+const overlay = document.getElementById('overlay');
+const audio = document.getElementById('audio');
+const centerBox = document.getElementById('centerBox');
+const boxClock = document.getElementById('boxClock');
+const profilePic = document.getElementById('profilePic');
+const userInfo = document.getElementById('userInfo');
+const userDesc = document.getElementById('userDesc');
+
+let targetX = 0, targetY = 0;
+let rotateX = 0, rotateY = 0;
+const maxTilt = 8; // degrees
+const tiltEase = 0.08;
+
+// CENTER BOX TILT
 centerBox.addEventListener('mousemove', e => {
   const rect = centerBox.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
+  const percentX = (e.clientX - rect.left - rect.width/2) / (rect.width/2);
+  const percentY = (e.clientY - rect.top - rect.height/2) / (rect.height/2);
 
-  const percentX = (x - rect.width/2) / (rect.width/2);
-  const percentY = (y - rect.height/2) / (rect.height/2);
-
-  targetY = percentX * maxTilt;        // horizontal tilt
-  targetX = -percentY * maxTilt;       // vertical tilt (inverted so top moves up)
+  targetY = percentX * maxTilt;
+  targetX = -percentY * maxTilt; // invert vertical
 });
 
 centerBox.addEventListener('mouseleave', () => {
@@ -416,40 +434,64 @@ function smoothTilt() {
 }
 smoothTilt();
 
-
-const boxClock = document.getElementById('boxClock');
-
+// CLOCK
 function updateBoxClock() {
   const now = new Date();
   let hours = now.getHours();
   const minutes = now.getMinutes();
   const seconds = now.getSeconds();
   const ampm = hours >= 12 ? 'PM' : 'AM';
-  hours = hours % 12 || 12; // convert to 12-hour
+  hours = hours % 12 || 12;
   boxClock.textContent = `${hours}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')} ${ampm}`;
 }
 
+// TYPEWRITER EFFECT
+const descriptions = ["abc", "def", "ghi", "jkl", "mno"];
+let descIndex = 0;
+let charIndex = 0;
+let deleting = false;
+
+function typeWriter() {
+  const current = descriptions[descIndex];
+  if (!deleting) {
+    userDesc.textContent = current.substring(0, charIndex + 1);
+    charIndex++;
+    if (charIndex === current.length) {
+      deleting = true;
+      setTimeout(typeWriter, 700);
+      return;
+    }
+  } else {
+    userDesc.textContent = current.substring(0, charIndex - 1);
+    charIndex--;
+    if (charIndex === 0) {
+      deleting = false;
+      descIndex = (descIndex + 1) % descriptions.length;
+    }
+  }
+  setTimeout(typeWriter, deleting ? 50 : 150);
+}
+
+// OVERLAY CLICK
 overlay.addEventListener('click', () => {
   canvas.style.filter = 'none';
   overlay.classList.add('hidden');
   audio.play();
 
-  // fade in the box
+  // Fade in center box, profile pic, and user info sequentially
   setTimeout(() => {
     centerBox.classList.add('visible');
+    profilePic.classList.add('visible');
 
-    // fade in content (text) after 0.3s
     setTimeout(() => {
-      boxContent.classList.add('visible');
-
-      // show the clock and start updating
+      userInfo.classList.add('visible');
+      typeWriter();
       boxClock.classList.add('visible');
       updateBoxClock();
       setInterval(updateBoxClock, 1000);
-    }, 300);
+    }, 200);
   }, 100);
 });
-  
 </script>
 
 </body>
