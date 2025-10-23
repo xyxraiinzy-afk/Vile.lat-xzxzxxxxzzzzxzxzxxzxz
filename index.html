@@ -15,15 +15,17 @@
     font-family: monospace, monospace;
   }
 
-  canvas {
-    display: block;
-    position: fixed;
-    top: 0; left: 0;
-    pointer-events: none;
-    z-index: 1;
-    filter: blur(8px);
-    transition: filter 0.5s ease;
-  }
+canvas {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 1;
+  filter: blur(8px);
+  transition: filter 0.5s ease;
+  background: black;
+}
 
   #overlay {
     position: fixed;
@@ -53,10 +55,11 @@
   width: 665px;
   height: 350px;
   transform: translate(-50%, -50%);
-  background: rgba(0, 0, 0, 0.5); /* black, semi-transparent */
-  border: 1px solid rgba(255, 255, 255, 0.05); /* subtle outline */
+  background: rgba(0, 0, 0, 0.35); /* glassy black, more see-through */
+  border: 1px solid rgba(255, 255, 255, 0.08); /* subtle outline */
   border-radius: 20px;
-  backdrop-filter: blur(25px) saturate(150%);
+  backdrop-filter: blur(35px) saturate(150%);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* optional subtle glow for depth */
   transition: transform 0.2s ease, opacity 0.8s ease;
   display: flex;
   justify-content: center;
