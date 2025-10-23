@@ -293,13 +293,13 @@ overlay.addEventListener('click', () => {
   }, 100);
 });
 
-let rotateX = 0;
-let rotateY = 0;
+let translateX = 0;
+let translateY = 0;
 let targetX = 0;
 let targetY = 0;
 
-const maxTilt = 25;   // strong tilt like clip
-const ease = 0.2;     // smooth interpolation
+const maxMove = 20; // how far it moves toward cursor
+const ease = 0.15;  // smoothing
 
 centerBox.addEventListener('mousemove', e => {
   const rect = centerBox.getBoundingClientRect();
@@ -309,24 +309,24 @@ centerBox.addEventListener('mousemove', e => {
   const percentX = (x - rect.width / 2) / (rect.width / 2);   // -1 to 1
   const percentY = (y - rect.height / 2) / (rect.height / 2);  // -1 to 1
 
-  targetX = -percentY * maxTilt; // vertical tilt
-  targetY = percentX * maxTilt;  // horizontal tilt
+  targetX = percentX * maxMove;       // move horizontally toward cursor
+  targetY = -percentY * maxMove;      // move vertically toward cursor (pull up)
 });
 
 centerBox.addEventListener('mouseleave', () => {
   targetX = 0;
-  targetY = 0;
+  targetY = 0; // return to center
 });
 
-function smoothTilt() {
-  rotateX += (targetX - rotateX) * ease;
-  rotateY += (targetY - rotateY) * ease;
+function smoothMove() {
+  translateX += (targetX - translateX) * ease;
+  translateY += (targetY - translateY) * ease;
 
-  centerBox.style.transform = `translate(-50%, -50%) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-  requestAnimationFrame(smoothTilt);
+  centerBox.style.transform = `translate(calc(-50% + ${translateX}px), calc(-50% + ${translateY}px))`;
+  requestAnimationFrame(smoothMove);
 }
 
-smoothTilt();
+smoothMove();
   
 </script>
 
