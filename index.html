@@ -296,22 +296,21 @@ overlay.addEventListener('click', () => {
   }, 100);
 });
 
-// Smooth "pull toward mouse" effect
-let translateX = 0, translateY = 0;
+let rotateX = 0, rotateY = 0;
 let targetX = 0, targetY = 0;
-const maxMove = 30;  // adjust how far it moves
-const ease = 0.15;   // smoothing
+const maxTilt = 20; // degrees
+const tiltEase = 0.15;
 
 centerBox.addEventListener('mousemove', e => {
   const rect = centerBox.getBoundingClientRect();
   const x = e.clientX - rect.left;
   const y = e.clientY - rect.top;
 
-  const percentX = (x - rect.width / 2) / (rect.width / 2);   // -1 to 1
-  const percentY = (y - rect.height / 2) / (rect.height / 2);  // -1 to 1
+  const percentX = (x - rect.width/2) / (rect.width/2);
+  const percentY = (y - rect.height/2) / (rect.height/2);
 
-  targetX = percentX * maxMove;
-  targetY = -percentY * maxMove;  // negative to pull up
+  targetY = percentX * maxTilt;        // horizontal tilt
+  targetX = -percentY * maxTilt;       // vertical tilt (inverted so top moves up)
 });
 
 centerBox.addEventListener('mouseleave', () => {
@@ -319,14 +318,13 @@ centerBox.addEventListener('mouseleave', () => {
   targetY = 0;
 });
 
-function smoothMove() {
-  translateX += (targetX - translateX) * ease;
-  translateY += (targetY - translateY) * ease;
-
-  centerBox.style.transform = `translate(calc(-50% + ${translateX}px), calc(-50% + ${translateY}px))`;
-  requestAnimationFrame(smoothMove);
+function smoothTilt() {
+  rotateX += (targetX - rotateX) * tiltEase;
+  rotateY += (targetY - rotateY) * tiltEase;
+  centerBox.style.transform = `translate(-50%, -50%) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+  requestAnimationFrame(smoothTilt);
 }
-smoothMove();
+smoothTilt();
   
 </script>
 
