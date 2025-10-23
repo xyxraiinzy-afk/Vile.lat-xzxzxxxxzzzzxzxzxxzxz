@@ -46,24 +46,24 @@
   }
 
   /* CENTER BOX */
-  #centerBox {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 665px;
-    height: 350px;
-    transform: translate(-50%, -50%);
-    background: rgba(30, 30, 30, 0.5); /* brighter and more translucent */
-    border: 1px solid rgba(255, 255, 255, 0.1); /* subtle outline */
-    border-radius: 20px;
-    backdrop-filter: blur(25px) saturate(150%);
-    transition: transform 0.2s ease, opacity 0.8s ease;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    z-index: 5;
-  }
+ #centerBox {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 665px;
+  height: 350px;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.5); /* black, semi-transparent */
+  border: 1px solid rgba(255, 255, 255, 0.05); /* subtle outline */
+  border-radius: 20px;
+  backdrop-filter: blur(25px) saturate(150%);
+  transition: transform 0.2s ease, opacity 0.8s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  z-index: 5;
+}
 
   #centerBox.visible {
     opacity: 1;
