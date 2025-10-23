@@ -49,26 +49,41 @@
   }
 
   /* CENTER BOX */
-  #centerBox {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 665px;
-    height: 350px;
-    transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, 0.35); /* glassy black, more see-through */
-    border: 1px solid rgba(255, 255, 255, 0.08); /* subtle outline */
-    border-radius: 20px;
-    backdrop-filter: blur(35px) saturate(150%);
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* optional subtle glow for depth */
-    transition: transform 0.2s ease, opacity 0.8s ease;
-    display: flex;
-    justify-content: flex-start; /* for PFP + info alignment */
-    align-items: center;
-    padding-left: 180px; /* space for PFP */
-    opacity: 0;
-    z-index: 5;
-  }
+ #centerBox {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 700px;   /* restored original width */
+  height: 390px;  /* restored original height */
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  backdrop-filter: blur(35px) saturate(150%);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s ease, opacity 0.8s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  z-index: 5;
+}
+
+/* CLOCK */
+#boxClock {
+  position: absolute;
+  bottom: 15px;   /* bottom-left corner */
+  left: 15px;
+  font-family: 'MinecraftItalic', monospace;
+  font-size: 1rem;
+  color: white;
+  user-select: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+#boxClock.visible {
+  opacity: 1;
+}
 
   #centerBox.visible {
     opacity: 1;
