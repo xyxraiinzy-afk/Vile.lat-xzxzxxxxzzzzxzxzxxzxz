@@ -5,10 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Vile</title>
 <style>
+>
   html, body {
-    margin: 0; padding: 0; overflow: hidden; background: black; height: 100%;
+    margin: 0; 
+    padding: 0; 
+    overflow: hidden; 
+    background: black; 
+    height: 100%;
     font-family: monospace, monospace;
   }
+
   canvas {
     display: block;
     position: fixed;
@@ -18,6 +24,7 @@
     filter: blur(8px);
     transition: filter 0.5s ease;
   }
+
   #overlay {
     position: fixed;
     top: 0; left: 0;
@@ -33,92 +40,111 @@
     cursor: pointer;
     z-index: 10;
   }
+
   #overlay.hidden {
     display: none;
   }
 
-#centerBox {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 700px;
-  height: 380px;
-  transform: translate(-50%, -50%);
-  background: rgba(5,5,5,0.4);
-  border: 1px solid rgba(255,255,255,0.05);
-  border-radius: 20px;
-  backdrop-filter: blur(20px) saturate(150%);
-  transition: transform 0.1s ease-out, opacity 0.8s ease;
-  opacity: 0;
-  z-index: 5;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+  /* CENTER BOX */
+  #centerBox {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 665px;
+    height: 350px;
+    transform: translate(-50%, -50%);
+    background: rgba(30, 30, 30, 0.5); /* brighter and more translucent */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* subtle outline */
+    border-radius: 20px;
+    backdrop-filter: blur(25px) saturate(150%);
+    transition: transform 0.2s ease, opacity 0.8s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    z-index: 5;
+  }
 
-#centerBox.visible {
-  opacity: 1;
-}
+  #centerBox.visible {
+    opacity: 1;
+  }
 
-#boxContent {
-  opacity: 0;
-  transition: opacity 0.8s ease;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
+  #boxContent {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
 
-#boxContent.visible {
-  opacity: 1;
-}
+  #boxContent.visible {
+    opacity: 1;
+  }
 
-#boxContent h1 {
-  color: white;
-  font-size: 4rem;
-  letter-spacing: 2px;
-  user-select: none;
-}
+  #boxContent h1 {
+    color: white;
+    font-size: 4rem;
+    letter-spacing: 2px;
+    user-select: none;
+  }
 
-#boxClock {
-  position: absolute;
-  bottom: 15px;
-  left: 15px;
-  font-family: 'MinecraftItalic', monospace; 
-  font-size: 1rem;
-  color: white;
-  user-select: none;
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
-#boxClock.visible {
-  opacity: 1;
-}
+  /* CLOCK */
+  #boxClock {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    font-family: 'MinecraftItalic', monospace; 
+    font-size: 1rem;
+    color: white;
+    user-select: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  #boxClock.visible {
+    opacity: 1;
+  }
 
-@font-face {
-  font-family: 'MinecraftItalic';
-  src: url('MinecraftItalic-R8Mo.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-}
+  @font-face {
+    font-family: 'MinecraftItalic';
+    src: url('MinecraftItalic-R8Mo.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+  }
 
-#profilePic {
-  position: absolute;
-  top: 35px;
-  left: 25px;
-  width: 124px;     
-  height: 124px;
-  border-radius: 50%; 
-  object-fit: cover;  
-  opacity: 0; 
-  transition: opacity 0.5s ease;
-  z-index: 10;
-}
+  /* PROFILE PICTURE */
+  #profilePic {
+    position: absolute;
+    top: 35px;
+    left: 25px;
+    width: 124px;     
+    height: 124px;
+    border-radius: 50%; 
+    object-fit: cover;  
+    opacity: 0; 
+    transition: opacity 0.5s ease;
+    z-index: 10;
+  }
 
-#profilePic.visible {
-  opacity: 1;
-}
-  
+  #profilePic.visible {
+    opacity: 1;
+  }
+
+  /* GENERAL FADE-IN FOR ALL ELEMENTS */
+  #centerBox,
+  #profilePic,
+  #boxContent,
+  #boxClock {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  #centerBox.visible,
+  #profilePic.visible,
+  #boxContent.visible,
+  #boxClock.visible {
+    opacity: 1;
+  }
 </style>
 <script>
   document.addEventListener("DOMContentLoaded", () => {
@@ -156,9 +182,16 @@
   
 <div id="centerBox">
   <img id="profilePic" src="pfp.png" alt="Profile Picture">
-  <div id="boxContent">
-    <h1>ruxe</h1>
+
+  <div id="userInfo">
+    <div id="nameBadge">
+      <span id="userName">Ruxe</span>
+      <span id="userBadge">[Badge]</span>
+    </div>
+    <div id="description">Loading...</div>
+    <div id="message">Welcome to the profile!</div>
   </div>
+
   <div id="boxClock"></div>
 </div>
   
@@ -321,30 +354,28 @@
 const centerBox = document.getElementById('centerBox');
 const boxContent = document.getElementById('boxContent');
 
-// Show box with fade-in when overlay clicked
 overlay.addEventListener('click', () => {
   canvas.style.filter = 'none';
   overlay.classList.add('hidden');
   audio.play();
 
-  // fade in the box first
   setTimeout(() => {
     centerBox.classList.add('visible');
 
-    // fade in profile picture first
-    const profilePic = document.getElementById('profilePic');
-    profilePic.classList.add('visible');
-
-    // fade in the text after 0.3s
     setTimeout(() => {
-      boxContent.classList.add('visible');
+      profilePic.classList.add('visible');
 
-      // fade in the clock after another 0.3s
       setTimeout(() => {
-        boxClock.classList.add('visible');
-        updateBoxClock(); // start the clock
-        setInterval(updateBoxClock, 1000);
+        userInfo.classList.add('visible');
+
+        setTimeout(() => {
+          boxClock.classList.add('visible');
+          updateBoxClock();
+          setInterval(updateBoxClock, 1000);
+        }, 300);
+
       }, 300);
+
     }, 300);
 
   }, 100);
