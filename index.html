@@ -129,13 +129,31 @@
 }
 
 #userDesc {
-  margin: 0; 
+  margin: -5px 0 0 0; /* adjust vertical spacing */
   font-size: 1.2rem;
   min-height: 1em;
   white-space: nowrap;
   overflow: hidden;
-  border-right: 2px solid white;
+  position: relative; /* needed for pseudo-element */
 }
+
+/* blinking caret */
+#userDesc::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0; /* adjust to align with text */
+  width: 2px; /* caret thickness */
+  height: 1.2em; /* caret height (change this!) */
+  background: white; /* caret color */
+  animation: blink 1s step-start infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  50.01%, 100% { opacity: 0; }
+}
+
 
   /* CLOCK */
   #boxClock {
