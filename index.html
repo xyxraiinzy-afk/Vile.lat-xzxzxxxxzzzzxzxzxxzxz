@@ -101,6 +101,24 @@
   font-weight: normal;
   font-style: normal;
 }
+
+#profilePic {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  width: 60px;     
+  height: 60px;
+  border-radius: 50%; 
+  object-fit: cover;  
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  opacity: 0; 
+  transition: opacity 0.5s ease;
+  z-index: 10;
+}
+
+#profilePic.visible {
+  opacity: 1;
+}
   
 </style>
 <script>
@@ -136,11 +154,13 @@
 <body>
 
 <div id="overlay">// Click //</div>
+  
 <div id="centerBox">
+  <img id="profilePic" src="pfp.png" alt="Profile Picture">
   <div id="boxContent">
     <h1>ruxe</h1>
-    <div id="boxClock"></div>
   </div>
+  <div id="boxClock"></div>
 </div>
   
 <audio id="audio" src="Sound.mp3" loop></audio>
@@ -312,10 +332,22 @@ overlay.addEventListener('click', () => {
   setTimeout(() => {
     centerBox.classList.add('visible');
 
-    // fade in content (text) after 0.3s
+    // fade in profile picture first
+    const profilePic = document.getElementById('profilePic');
+    profilePic.classList.add('visible');
+
+    // fade in the text after 0.3s
     setTimeout(() => {
       boxContent.classList.add('visible');
+
+      // fade in the clock after another 0.3s
+      setTimeout(() => {
+        boxClock.classList.add('visible');
+        updateBoxClock(); // start the clock
+        setInterval(updateBoxClock, 1000);
+      }, 300);
     }, 300);
+
   }, 100);
 });
 
