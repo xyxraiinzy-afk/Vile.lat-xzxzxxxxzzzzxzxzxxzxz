@@ -489,7 +489,7 @@ function typeWriter() {
     charIndex++;
     if (charIndex === current.length) {
       deleting = true;
-      setTimeout(typeWriter, 700);
+      setTimeout(typeWriter, 1000);
       return;
     }
   } else {
@@ -500,7 +500,7 @@ function typeWriter() {
       descIndex = (descIndex + 1) % descriptions.length;
     }
   }
-  setTimeout(typeWriter, deleting ? 75 : 200);
+  setTimeout(typeWriter, deleting ? 65 : 150);
 }
 
 overlay.addEventListener('click', () => {
