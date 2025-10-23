@@ -297,34 +297,45 @@ let rotateX = 0;
 let rotateY = 0;
 let targetX = 0;
 let targetY = 0;
-const maxTilt = 30; // strength of tilt
-const ease = 0.2;   // smoothing factor
+
+const maxTilt = 12;     // gentle, more realistic tilt
+const stiffness = 0.05; // spring stiffness
+const damping = 0.12;   // how fast it settles
 
 centerBox.addEventListener('mousemove', e => {
   const rect = centerBox.getBoundingClientRect();
   const x = e.clientX - rect.left;
   const y = e.clientY - rect.top;
 
-  // relative position to center
   const percentX = (x - rect.width / 2) / (rect.width / 2);   // -1 to 1
   const percentY = (y - rect.height / 2) / (rect.height / 2); // -1 to 1
 
-  // invert vertical so top pulls up
+  // subtle tilt, inverted vertical for pull-up effect
   targetX = -percentY * maxTilt;
   targetY = percentX * maxTilt;
 });
 
 centerBox.addEventListener('mouseleave', () => {
   targetX = 0;
-  targetY = 0; // reset tilt
+  targetY = 0; // spring back to flat
 });
 
 function smoothTilt() {
-  rotateX += (targetX - rotateX) * ease;
-  rotateY += (targetY - rotateY) * ease;
+  // spring-like motion
+  const deltaX = targetX - rotateX;
+  const deltaY = targetY - rotateY;
+
+  rotateX += deltaX * stiffness;
+  rotateY += deltaY * stiffness;
+
+  // damping for smooth settling
+  rotateX *= (1 - damping);
+  rotateY *= (1 - damping);
+
   centerBox.style.transform = `translate(-50%, -50%) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
   requestAnimationFrame(smoothTilt);
 }
+
 smoothTilt();
   
 </script>
