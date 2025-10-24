@@ -585,7 +585,7 @@ overlay.addEventListener('click', () => {
     centerBox.classList.add('visible');
     profilePic.classList.add('visible');
 
-fetch("https://noel.hidencloud.com/api/user")
+fetch("https://noel.hidencloud.com:24580/api/user")
   .then(r => r.json())
   .then(user => {
 
