@@ -203,6 +203,96 @@
   pointer-events: none;
 }
   
+#discordWidget {
+  position: absolute;
+  bottom: 75px;
+  right: 28px;
+  width: 625px;
+  height: 85px;
+  background: rgba(25, 25, 25, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  color: white;
+  font-family: 'MinecraftItalic', monospace;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+#discordPfp {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  margin-left: 8px;
+  margin-right: 12px;
+  object-fit: cover;
+}
+
+#discordInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#discordNameContainer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#discordName {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+#discordBadges {
+  display: flex;
+  align-items: center;
+}
+
+#discordBadges img {
+  width: 23px;
+  height: 23px;
+  margin-left: 2px;
+  transform: translateY(1px);
+}
+
+#discordBadges img:hover {
+  transform: scale(1.01);
+  filter: brightness(1.2);
+}
+
+#discordActivity {
+  font-size: 0.9rem;
+  color: #bbb;
+  margin-top: 3px;
+}
+
+#discordStatusWrapper {
+  position: absolute;
+  bottom: 20px;
+  right: 32px;
+  width: 24px;
+  height: 24px;
+}
+
+#discordStatus {
+  position: absolute;
+  bottom: 20px;
+  left: 64px;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: rgba(25, 25, 25, 0.9);
+  border: 4px solid rgba(25, 25, 25, 0.9);
+  z-index: 3;
+}
+
 </style>
 <script>
   document.addEventListener("DOMContentLoaded", () => {
@@ -233,35 +323,6 @@
     });
   });
 
-#userInfo {
-  margin-left: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.5s ease;
-  font-family: 'MinecraftItalic', monospace;
-  color: white;
-}
-
-#userInfo.visible {
-  opacity: 1;
-}
-
-#userName {
-  margin: 0;
-  font-size: 2rem;
-}
-
-#userDesc {
-  margin: 0;
-  font-size: 1.2rem;
-  min-height: 1em;
-  white-space: nowrap;
-  overflow: hidden;
-  border-right: 2px solid white;
-}
-  
 </script>
 </head>
 <body>
@@ -275,7 +336,21 @@
     <p id="userDesc"></p>
   </div>
   <div id="boxClock"></div> 
-  <p id="noWidgetText">No widget yet :(</p>
+
+  <div id="discordWidget">
+    <div id="discordPfpContainer">
+      <img id="discordPfp" src="" alt="Discord Profile Picture" />
+      <img id="discordStatus" src="offline.png" alt="Discord Status" />
+    </div>
+    
+    <div id="discordInfo">
+      <div id="discordNameContainer">
+        <h3 id="discordName">Loading...</h3>
+        <div id="discordBadges"></div>
+      </div>
+      <p id="discordActivity">Loading activity...</p>
+    </div>
+  </div>
 </div>
   
 <audio id="audio" src="Sound.mp3" loop></audio>
@@ -510,15 +585,93 @@ overlay.addEventListener('click', () => {
     centerBox.classList.add('visible');
     profilePic.classList.add('visible');
 
-    setTimeout(() => {
-      userInfo.classList.add('visible');
-      typeWriter();
-      boxClock.classList.add('visible');
-      updateBoxClock();
-      setInterval(updateBoxClock, 1000);
-    }, 200);
+fetch("https://noel.hidencloud.com/api/user")
+  .then(r => r.json())
+  .then(user => {
 
-  }, 100);
+    const nameText = `@${user.username}  /  ${user.globalName || ""}`;
+    document.getElementById("discordName").textContent = nameText.trim();
+    document.getElementById("discordPfp").src =
+      `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=512`;
+
+    const statusImg = document.getElementById("discordStatus");
+    switch (user.status) {
+      case "online":
+        statusImg.src = "online.png";
+        break;
+      case "idle":
+        statusImg.src = "idle.png";
+        break;
+      case "dnd":
+        statusImg.src = "dnd.png";
+        break;
+      default:
+        statusImg.src = "offline.png";
+        break;
+    }
+
+    const badgesDiv = document.getElementById("discordBadges");
+    badgesDiv.innerHTML = "";
+
+    const activityEl = document.getElementById("discordActivity");
+
+    if (user.status === "offline") {
+      let lastSeenText = "last seen recently";
+
+      if (user.last_seen) {
+        const lastSeenMs = Date.now() - new Date(user.last_seen).getTime();
+        const seconds = Math.floor(lastSeenMs / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+
+        if (days > 0)
+          lastSeenText = `last seen ${days} day${days > 1 ? "s" : ""} ago`;
+        else if (hours > 0)
+          lastSeenText = `last seen ${hours} hour${hours > 1 ? "s" : ""} ago`;
+        else if (minutes > 0)
+          lastSeenText = `last seen ${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+        else
+          lastSeenText = `last seen ${seconds} second${seconds > 1 ? "s" : ""} ago`;
+      }
+
+      activityEl.textContent = lastSeenText;
+    } else {
+      activityEl.textContent = user.activity || "No activity";
+    }
+
+    if (user.badges && user.badges.length > 0) {
+      user.badges.forEach(url => {
+        const img = document.createElement("img");
+        img.src = url;
+        img.alt = "Badge";
+
+        if (url.includes("2ba85e8026a8614b640c2837bcdfe21b")) {
+          img.title = "Nitro Subscriber";
+        } else if (url.includes("72bed924410c304dbe3d00a6e593ff59")) {
+          img.title = "Server Booster";
+        } else {
+          img.title = "Badge";
+        }
+
+        badgesDiv.appendChild(img);
+      });
+    }
+  })
+  .catch(() => {
+    document.getElementById("discordName").textContent =
+      "Widget failed to load";
+  });
+
+setTimeout(() => {
+  userInfo.classList.add("visible");
+  typeWriter();
+  boxClock.classList.add("visible");
+  updateBoxClock();
+  setInterval(updateBoxClock, 1000);
+}, 200);
+
+}, 100);
 });
 
 </script>
