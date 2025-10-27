@@ -513,32 +513,41 @@ const profilePic = document.getElementById('profilePic');
 const userInfo = document.getElementById('userInfo');
 const userDesc = document.getElementById('userDesc');
 
+const maxTilt = 18; // max degrees of tilt
+const smoothness = 0.1; // easing speed
+
+let currentX = 0, currentY = 0;
 let targetX = 0, targetY = 0;
-let rotateX = 0, rotateY = 0;
-const maxTilt = 8;
-const tiltEase = 0.08;
+let boxRect = centerBox.getBoundingClientRect();
 
-centerBox.addEventListener('mousemove', e => {
-  const rect = centerBox.getBoundingClientRect();
-  const percentX = (e.clientX - rect.left - rect.width/2) / (rect.width/2);
-  const percentY = (e.clientY - rect.top - rect.height/2) / (rect.height/2);
+function updateBoxTilt(e) {
+  const x = e.clientX - boxRect.left;
+  const y = e.clientY - boxRect.top;
+  const percentX = (x / boxRect.width) - 0.5;
+  const percentY = (y / boxRect.height) - 0.5;
 
-  targetY = percentX * maxTilt;
-  targetX = -percentY * maxTilt;
+  targetX = percentY * maxTilt;
+  targetY = percentX * -maxTilt;
+}
+
+function animateTilt() {
+  currentX += (targetX - currentX) * smoothness;
+  currentY += (targetY - currentY) * smoothness;
+  centerBox.style.transform = `translate(-50%, -50%) perspective(1000px) rotateX(${currentX}deg) rotateY(${currentY}deg)`;
+  requestAnimationFrame(animateTilt);
+}
+
+centerBox.addEventListener('mouseenter', () => {
+  boxRect = centerBox.getBoundingClientRect();
 });
 
+centerBox.addEventListener('mousemove', updateBoxTilt);
 centerBox.addEventListener('mouseleave', () => {
   targetX = 0;
   targetY = 0;
 });
 
-function smoothTilt() {
-  rotateX += (targetX - rotateX) * tiltEase;
-  rotateY += (targetY - rotateY) * tiltEase;
-  centerBox.style.transform = `translate(-50%, -50%) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-  requestAnimationFrame(smoothTilt);
-}
-smoothTilt();
+animateTilt();
 
 function updateBoxClock() {
   const now = new Date();
