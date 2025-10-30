@@ -678,14 +678,17 @@ fetch("https://api.vile.lat/api/user")
       "Widget failed to load";
   });
 
-setTimeout(() => {
-  userInfo.classList.add("visible");
-  typeWriter();
-  boxClock.classList.add("visible");
-  updateBoxClock();
-  setInterval(updateBoxClock, 1000);
-}, 200);
+    setTimeout(() => {
+      userInfo.classList.add("visible");
+      typeWriter();
+      boxClock.classList.add("visible");
+      updateBoxClock();
+      setInterval(updateBoxClock, 1000);
+    }, 200);
 
+  }, 100); 
+
+});
 </script>
 
 </body>
