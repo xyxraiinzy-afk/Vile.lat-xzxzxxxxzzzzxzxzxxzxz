@@ -622,7 +622,6 @@ fetch("https://api.vile.lat/api/user")
     badgesDiv.innerHTML = "";
     const activityEl = document.getElementById("discordActivity");
 
-    // --- Live timer for offline status ---
     if (user.status === "offline") {
       let lastSeenTime = user.last_seen ? new Date(user.last_seen).getTime() : Date.now();
 
@@ -654,7 +653,6 @@ fetch("https://api.vile.lat/api/user")
       activityEl.textContent = user.activity || "Currently doing nothing...";
     }
 
-    // --- Badges display ---
     if (user.badges && user.badges.length > 0) {
       user.badges.forEach(url => {
         const img = document.createElement("img");
