@@ -597,7 +597,6 @@ overlay.addEventListener('click', () => {
 fetch("https://api.vile.lat/api/user")
   .then(r => r.json())
   .then(user => {
-
     const nameText = `@${user.username}  /  ${user.globalName || ""}`;
     document.getElementById("discordName").textContent = nameText.trim();
     document.getElementById("discordPfp").src =
@@ -621,46 +620,41 @@ fetch("https://api.vile.lat/api/user")
 
     const badgesDiv = document.getElementById("discordBadges");
     badgesDiv.innerHTML = "";
-
     const activityEl = document.getElementById("discordActivity");
 
+    // --- Live timer for offline status ---
     if (user.status === "offline") {
-  const activityEl = document.getElementById("discordActivity");
-  let lastSeenTime = user.last_seen ? new Date(user.last_seen).getTime() : Date.now();
+      let lastSeenTime = user.last_seen ? new Date(user.last_seen).getTime() : Date.now();
 
-  function updateOfflineTimer() {
-    const diffMs = Date.now() - lastSeenTime;
-    const seconds = Math.floor(diffMs / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-    const weeks = Math.floor(days / 7);
-    const months = Math.floor(days / 30);
-    const years = Math.floor(days / 365);
+      function updateOfflineTimer() {
+        const diffMs = Date.now() - lastSeenTime;
+        const seconds = Math.floor(diffMs / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+        const weeks = Math.floor(days / 7);
+        const months = Math.floor(days / 30);
+        const years = Math.floor(days / 365);
 
-    let text = "last seen ";
-    if (seconds < 60) text += `${seconds} second${seconds !== 1 ? "s" : ""} ago`;
-    else if (minutes < 60) text += `${minutes} minute${minutes !== 1 ? "s" : ""} ago`;
-    else if (hours < 24) text += `${hours} hour${hours !== 1 ? "s" : ""} ago`;
-    else if (days < 7) text += `${days} day${days !== 1 ? "s" : ""} ago`;
-    else if (weeks < 4) text += `${weeks} week${weeks !== 1 ? "s" : ""} ago`;
-    else if (months < 12) text += `${months} month${months !== 1 ? "s" : ""} ago`;
-    else text += `${years} year${years !== 1 ? "s" : ""} ago`;
+        let text = "last seen ";
+        if (seconds < 60) text += `${seconds} second${seconds !== 1 ? "s" : ""} ago`;
+        else if (minutes < 60) text += `${minutes} minute${minutes !== 1 ? "s" : ""} ago`;
+        else if (hours < 24) text += `${hours} hour${hours !== 1 ? "s" : ""} ago`;
+        else if (days < 7) text += `${days} day${days !== 1 ? "s" : ""} ago`;
+        else if (weeks < 4) text += `${weeks} week${weeks !== 1 ? "s" : ""} ago`;
+        else if (months < 12) text += `${months} month${months !== 1 ? "s" : ""} ago`;
+        else text += `${years} year${years !== 1 ? "s" : ""} ago`;
 
-    activityEl.textContent = text;
-  }
+        activityEl.textContent = text;
+      }
 
-  updateOfflineTimer();
-  setInterval(updateOfflineTimer, 1000);
-} else {
-  activityEl.textContent = user.activity || "Currently doing nothing...";
-}
-
-      activityEl.textContent = lastSeenText;
+      updateOfflineTimer();
+      setInterval(updateOfflineTimer, 1000);
     } else {
-      activityEl.textContent = user.activity || "No activity";
+      activityEl.textContent = user.activity || "Currently doing nothing...";
     }
 
+    // --- Badges display ---
     if (user.badges && user.badges.length > 0) {
       user.badges.forEach(url => {
         const img = document.createElement("img");
@@ -691,9 +685,6 @@ setTimeout(() => {
   updateBoxClock();
   setInterval(updateBoxClock, 1000);
 }, 200);
-
-}, 100);
-});
 
 </script>
 
